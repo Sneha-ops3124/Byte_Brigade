@@ -3,8 +3,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { format } from "date-fns"
-import { Calendar as CalendarIcon, Trophy } from "lucide-react"
+import { format } from "date-fns";
+import { Calendar as CalendarIcon, Trophy } from "lucide-react";
+import { motion } from "framer-motion";
 
 import { Button } from '@/components/ui/button';
 import {
@@ -36,8 +37,8 @@ const formSchema = z.object({
 });
 
 export default function TournamentForm() {
-    const { toast } = useToast();
-    const router = useRouter();
+  const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,134 +51,171 @@ export default function TournamentForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     toast({
-        title: "Tournament Created!",
-        description: `The "${values.name}" tournament has been successfully created.`,
+      title: "Tournament Created!",
+      description: `The "${values.name}" tournament has been successfully created.`,
     });
     router.push('/dashboard');
   }
 
+  // Motion variants for staggered animation
+  const container = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        staggerChildren: 0.1,
+        duration: 0.6 
+      } 
+    },
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tournament Name</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Campus League 2024" {...field} />
-              </FormControl>
-              <FormDescription>The public name of your tournament.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea placeholder="A brief description of the tournament..." className="resize-y" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="grid md:grid-cols-2 gap-8">
-            <FormField
+      <motion.form 
+        onSubmit={form.handleSubmit(onSubmit)} 
+        className="space-y-8"
+        variants={container}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={item}>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tournament Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g., Campus League 2024" {...field} />
+                </FormControl>
+                <FormDescription>The public name of your tournament.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </motion.div>
+
+        <motion.div variants={item}>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="A brief description of the tournament..." className="resize-y" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </motion.div>
+
+        <motion.div className="grid md:grid-cols-2 gap-8" variants={item}>
+          <FormField
             control={form.control}
             name="sport"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Sport</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
+                  <FormControl>
                     <SelectTrigger>
-                        <SelectValue placeholder="Select a sport" />
+                      <SelectValue placeholder="Select a sport" />
                     </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
+                  </FormControl>
+                  <SelectContent>
                     <SelectItem value="Football">Football</SelectItem>
                     <SelectItem value="Basketball">Basketball</SelectItem>
                     <SelectItem value="Tennis">Tennis</SelectItem>
-                    </SelectContent>
+                  </SelectContent>
                 </Select>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
-            <FormField
+          />
+          <FormField
             control={form.control}
             name="format"
             render={({ field }) => (
-                <FormItem>
+              <FormItem>
                 <FormLabel>Format</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
+                  <FormControl>
                     <SelectTrigger>
-                        <SelectValue placeholder="Select a format" />
+                      <SelectValue placeholder="Select a format" />
                     </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
+                  </FormControl>
+                  <SelectContent>
                     <SelectItem value="Round Robin">Round Robin</SelectItem>
                     <SelectItem value="Knockout">Knockout</SelectItem>
                     <SelectItem value="League">League</SelectItem>
-                    </SelectContent>
+                  </SelectContent>
                 </Select>
                 <FormMessage />
-                </FormItem>
+              </FormItem>
             )}
-            />
-        </div>
-        <FormField
-          control={form.control}
-          name="startDate"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Start Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date < new Date() || date < new Date("1900-01-01")
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" size="lg">
+          />
+        </motion.div>
+
+        <motion.div variants={item}>
+          <FormField
+            control={form.control}
+            name="startDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Start Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date < new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </motion.div>
+
+        <motion.div variants={item} whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 300 }}>
+          <Button type="submit" size="lg">
             <Trophy className="mr-2 h-5 w-5" />
             Create Tournament
-        </Button>
-      </form>
+          </Button>
+        </motion.div>
+      </motion.form>
     </Form>
   );
 }
+

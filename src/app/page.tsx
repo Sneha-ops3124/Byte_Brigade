@@ -277,29 +277,60 @@ export default function Home() {
 
       {/* ================= CTA ================= */}
       <motion.section
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center border rounded-3xl p-12"
-      >
-        <h2 className="text-4xl font-black">
-          Ready to Elevate Your Tournament?
-        </h2>
-        <p className="mt-4 text-muted-foreground text-lg">
-          Join hundreds of organizers who trust ScoreFlow.
-        </p>
+  initial={{ opacity: 0, scale: 0.9 }}
+  whileInView={{ opacity: 1, scale: 1 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+  className="relative text-center border rounded-3xl p-12 bg-white dark:bg-gray-900 shadow-lg overflow-hidden"
+>
+  {/* Background Image */}
+  <div
+    className="absolute inset-0 bg-cover bg-center opacity-30"
+    style={{ backgroundImage: 'url("/images/tournament-bg.jpg")' }}
+  />
 
-        <Button
-          asChild
-          size="lg"
-          className="mt-8 rounded-full px-10 hover:scale-105 transition"
-        >
-          <Link href="/dashboard/create">
-            Create Your First Tournament
-          </Link>
-        </Button>
-      </motion.section>
+  {/* Dark overlay for readability */}
+  <div className="absolute inset-0 bg-black/40"></div>
+
+  {/* Content wrapper */}
+  <div className="relative z-10">
+    <motion.h2
+      className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.2 }}
+    >
+      Ready to Elevate Your Tournament?
+    </motion.h2>
+
+    <motion.p
+      className="mt-4 text-lg text-gray-600 dark:text-gray-300 hover:text-blue-500 transition-colors duration-500"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1, delay: 0.4 }}
+    >
+      Join hundreds of organizers who trust ScoreFlow.
+    </motion.p>
+
+    <motion.div
+      initial={{ scale: 0.9, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.6, delay: 0.6 }}
+    >
+      <Button
+        asChild
+        size="lg"
+        className="mt-8 rounded-full px-10 hover:scale-105 transition-transform duration-300"
+      >
+        <Link href="/dashboard/create">
+          Create Your First Tournament
+        </Link>
+      </Button>
+    </motion.div>
+  </div>
+</motion.section>
+
+
 
     </motion.main>
   );
