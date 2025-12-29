@@ -2,8 +2,8 @@
 ### A Modern Web Platform Built for Real-World Scale
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://byte-brigade-deploy.vercel.app/)
-[![Tech Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20Firebase%20%7C%20Tailwind-blue)]
-[![Status](https://img.shields.io/badge/Status-Active-success)]
+![Tech Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20Firebase%20%7C%20Tailwind-blue)
+![Status](https://img.shields.io/badge/Status-Active-success)
 
 ---
 
